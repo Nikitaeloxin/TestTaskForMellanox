@@ -1,34 +1,41 @@
-import time
+import argparse
 import multiprocessing
 # from multiprocessing import Process
 import sys
-import argparse
-
-
-def file_create(fileName):
-    size = int(namespace.size)
-    start_time = time.time()
-    with open(fileName, "w") as out:
-        out.seek(size - 1)
-        out.write(namespace.pattern)
-    print(fileName)
-    return time.time() - start_time
+import time
 
 
 def create_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('-files', type=int, help='amount files for creating')
     parser.add_argument('-size', type=int, help='file size')
-    parser.add_argument('-path', type=str, help='path for creating file')
-    parser.add_argument('-P', '--pattern', type=str, help='pattern for writing')
+    parser.add_argument('-path', type=str, help='path for creating file',
+                        default="~/PycharmProjects/TestScriptForMellanox")
+    parser.add_argument('-P', type=str, help='pattern for writing')
     parser.add_argument('-parallel', type=int, help='amount parallel threads')
 
     return parser
 
 
-if __name__ == '__main__':
+def get_namespace():
     parser = create_parser()
-    namespace = parser.parse_args(sys.argv[1:])
+    return parser.parse_args(sys.argv[1:])
+
+
+def file_create(fileName):
+    namespace = get_namespace()
+    size = int(namespace.size)
+    start_time = time.time()
+    with open(fileName, "w") as out:
+        out.seek(size - 1)
+        out.write(namespace.P)
+    print(fileName)
+    return time.time() - start_time
+
+
+def main():
+    namespace = get_namespace()
+
     count_files = namespace.files
     path = namespace.path
     count_pools = namespace.parallel
@@ -49,4 +56,8 @@ if __name__ == '__main__':
         if max_time < one_time:
             max_time = one_time
     print("Creating ", count_files, " files in ", path, " in ", count_pools, " threads\n",
-          "Min: ", min_time, " Max: ", max_time, "Avg: ", sum / count_files," Total: ", total_time)
+          "Min: ", min_time, " Max: ", max_time, "Avg: ", sum / count_files, " Total: ", total_time)
+
+
+if __name__ == '__main__':
+    main()
