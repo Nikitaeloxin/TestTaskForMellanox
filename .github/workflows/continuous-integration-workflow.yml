@@ -33,6 +33,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       uses: actions/checkout@master
-      name: Test
-      with:
-        script: test.py
+      run: python -m unittest test.py
