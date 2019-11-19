@@ -29,7 +29,7 @@ def file_create(fileName):
     with open(fileName, "w") as out:
         out.seek(size - 1)
         out.write(namespace.P)
-    print(fileName)
+    # print(fileName)
     return time.time() - start_time
 
 
