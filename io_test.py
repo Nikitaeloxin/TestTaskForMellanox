@@ -1,5 +1,6 @@
 import argparse
 import multiprocessing
+import os
 # from multiprocessing import Process
 import sys
 import time
@@ -9,7 +10,7 @@ def create_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('-files', type=int, help='amount files for creating')
     parser.add_argument('-size', type=int, help='file size')
-    parser.add_argument('-path', type=str, help='path for creating file',
+    parser.add_argument('-path', type=str, help='path for creating file, use \".\" for current dir',
                         default="~/PycharmProjects/TestScriptForMellanox")
     parser.add_argument('-P', type=str, help='pattern for writing')
     parser.add_argument('-parallel', type=int, help='amount parallel threads')
@@ -33,11 +34,20 @@ def file_create(fileName):
     return time.time() - start_time
 
 
+def check_and_create_parent_dir(path):
+    if path == '.':
+        path = os.getcwd()
+    if not os.path.exists(path):
+        os.mkdir(path)
+
+    return path
+
+
 def main():
     namespace = get_namespace()
 
     count_files = namespace.files
-    path = namespace.path
+    path = check_and_create_parent_dir(namespace.path)
     count_pools = namespace.parallel
     files = []
     for i in range(int(count_files)):
@@ -55,6 +65,7 @@ def main():
             min_time = one_time
         if max_time < one_time:
             max_time = one_time
+
     print("Creating ", count_files, " files in ", path, " in ", count_pools, " threads\n",
           "Min: ", min_time, " Max: ", max_time, "Avg: ", sum / count_files, " Total: ", total_time)
 

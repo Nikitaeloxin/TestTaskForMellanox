@@ -1,8 +1,8 @@
 import argparse
 import os
-import unittest
-import tempfile
 import shutil
+import tempfile
+import unittest
 from unittest import mock
 
 from io_test import main
