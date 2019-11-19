@@ -27,7 +27,7 @@ def file_create(fileName):
     size = int(namespace.size)
     start_time = time.time()
     with open(fileName, "w") as out:
-        out.seek(size - 1)
+        out.seek(size - len(namespace.P))
         out.write(namespace.P)
     # print(fileName)
     return time.time() - start_time
